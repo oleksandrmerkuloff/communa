@@ -15,7 +15,7 @@ class Petition(models.Model):
         ACCEPTED = "A", _("Accepted")
         REJECTED = "R", _("Rejected")
 
-    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     topic = models.CharField(max_length=50)
     content = models.TextField()
     status = models.CharField(choices=PetitionStatus, max_length=1, default=PetitionStatus.DELIVERED)
@@ -30,3 +30,18 @@ class Petition(models.Model):
         ordering = ["-created_at",]
         verbose_name = "Petition"
         verbose_name_plural = "Petitions"
+
+
+class PetitionVote(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    petition = models.ForeignKey(Petition, on_delete=models.CASCADE, related_name="votes")
+    resident = models.ForeignKey(User, on_delete=models.CASCADE, related_name="votes")
+    voted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Vote"
+        verbose_name_plural = "Votes"
+        ordering = ["petition", "-voted_ad"]
+        constraints = [
+            models.UniqueConstraint(fields=["petition", "user"], name="unique_user_petition_vote")
+        ]
