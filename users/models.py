@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+# Add custom validation for user phone
+
 class User(AbstractUser):
     email = models.EmailField(
         unique=True,
