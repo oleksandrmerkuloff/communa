@@ -41,7 +41,7 @@ class PetitionVote(models.Model):
     class Meta:
         verbose_name = "Vote"
         verbose_name_plural = "Votes"
-        ordering = ["petition", "-voted_ad"]
+        ordering = ["petition", "-voted_at"]
         constraints = [
-            models.UniqueConstraint(fields=["petition", "user"], name="unique_user_petition_vote")
+            models.UniqueConstraint(fields=["petition", "resident"], name="unique_user_petition_vote")
         ]

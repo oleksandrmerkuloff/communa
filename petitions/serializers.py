@@ -15,7 +15,7 @@ class VoteSerializer(ModelSerializer):
 class PetitionWriterSerializer(ModelSerializer):
     class Meta:
         model = Petition
-        fields = ("topic", "status", "author", "organization")
+        fields = ("topic", "content", "status", "author", "organization")
 
 
 class PetitionReaderSerializer(ModelSerializer):
