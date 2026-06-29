@@ -1,0 +1,25 @@
+from rest_framework import serializers
+
+from .models import User
+
+
+class UserReaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = (
+            "password",
+            "groups",
+            "user_permissions",
+        )
+
+
+class UserWriterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+        )
