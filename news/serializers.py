@@ -35,11 +35,13 @@ class PostWriterSerializer(serializers.ModelSerializer):
         tags = validated_data.pop("tags", [])
         attachments_data = validated_data.pop("attachments", [])
 
-        post = Post.objects.create(**validated_data)
-        post.tags.set(tags)
+        with transaction.atomic():
 
-        for attachment_data in attachments_data:
-            NewsAttachment.objects.create(post=post, **attachment_data)
+            post = Post.objects.create(**validated_data)
+            post.tags.set(tags)
+    
+            for attachment_data in attachments_data:
+                NewsAttachment.objects.create(post=post, **attachment_data)
         
         return post
 
@@ -53,9 +55,10 @@ class PostWriterSerializer(serializers.ModelSerializer):
             if tags :
                 instance.tags.set(tags)
             
+            existing_attachments = {att.id: att for att in instance.attachments.all()}
+            keep_attachment_ids = []
+            
             if attachments_data:
-                existing_attachments = {att.id: att for att in instance.attachments.all()}
-                keep_attachment_ids = []
 
                 for attachment_item in attachments_data:
                     attachment_id = attachment_item.get('id', None)
