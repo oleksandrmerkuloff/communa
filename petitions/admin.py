@@ -9,7 +9,7 @@ class PetitionAdmin(admin.ModelAdmin):
     list_display_links = ("topic",)
     list_filter = ("status", "author", "organization")
     list_per_page = 50
-    search_fields = ("topic")
+    search_fields = ("topic",)
     sortable_by = ("created_at", "organization",)
 
 

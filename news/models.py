@@ -47,6 +47,7 @@ class NewsAttachment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="attachments")
     file = models.FileField(upload_to="") # I'll add path later
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     #? maybe I'll add ordering here if I'll need to implement image circle for example
     # Here I'll connect the same lib as for a personal website

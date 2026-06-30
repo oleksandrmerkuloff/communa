@@ -34,7 +34,7 @@ class Membership(models.Model):
     class Meta:
         verbose_name = "Member"
         verbose_name_plural = "Members"
-        ordering = ["-registered_at"]
+        ordering = ["organization", "role", "-registered_at"]
         constraints = [
         models.UniqueConstraint(
             fields=["member", "organization"],

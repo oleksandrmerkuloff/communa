@@ -8,8 +8,6 @@ class UserReaderSerializer(serializers.ModelSerializer):
         model = User
         exclude = (
             "password",
-            "groups",
-            "user_permissions",
         )
 
 
@@ -21,7 +19,13 @@ class UserWriterSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "phone_number",
+            "password",
         )
+    
+    def create(self, validated_data):
+        password = validated_data.pop("password", None)
+
+        return User.objects.create(validated_data, password)
 
 
 class SelfUserSerializer(serializers.ModelSerializer):

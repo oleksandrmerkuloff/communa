@@ -11,7 +11,7 @@ class VoteViewSet(ModelViewSet):
     def get_queryset(self):
         return (
             PetitionVote.objects
-            .select_related("resident")
+            .select_related("petition", "resident",)
         )
 
 
