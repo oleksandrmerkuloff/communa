@@ -22,3 +22,9 @@ class UserWriterSerializer(serializers.ModelSerializer):
             "last_name",
             "phone_number",
         )
+
+
+class SelfUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
