@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Petition, PetitionVote
+
+
+admin.site.register(Petition)
+admin.site.register(PetitionVote)

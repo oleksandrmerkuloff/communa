@@ -3,11 +3,12 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-#! later I need to import organization model from organization app
+from organization.models import Organization
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=15)
-    organization = models.ForeignKey("Organization", related_name="tags", on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, related_name="tags", on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.name
@@ -31,7 +32,7 @@ class Post(models.Model):
     status = models.CharField(max_length=1, choices=PostStatus, default=PostStatus.DRAFT)
     views = models.PositiveIntegerField(blank=True, default=0)
     tags = models.ManyToManyField(Tag, related_name="posts")
-    organization = models.ForeignKey("Organization", related_name="posts", on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, related_name="posts", on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.title
