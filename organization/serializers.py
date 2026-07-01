@@ -4,6 +4,7 @@ from .models import Organization
 
 
 class OrganizationReaderSerializer(serializers.ModelSerializer):
+    address = serializers.ReadOnlyField()
     class Meta:
         model = Organization
         fields = "__all__"

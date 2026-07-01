@@ -6,8 +6,13 @@ from .models import User
 class UserReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = (
-            "password",
+        fields = (
+            "id"
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "registered_at",
         )
 
 
@@ -30,9 +35,3 @@ class UserWriterSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password", None)
 
         return User.objects.create_user(validated_data, password=password)
-
-
-class SelfUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = "__all__"

@@ -55,10 +55,9 @@ class PostWriterSerializer(serializers.ModelSerializer):
             if tags :
                 instance.tags.set(tags)
             
-            existing_attachments = {att.id: att for att in instance.attachments.all()}
-            keep_attachment_ids = []
-            
             if attachments_data:
+                existing_attachments = {att.id: att for att in instance.attachments.all()}
+                keep_attachment_ids = []
 
                 for attachment_item in attachments_data:
                     attachment_id = attachment_item.get('id', None)
