@@ -45,7 +45,7 @@ class Post(models.Model):
 
 class NewsAttachment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="attachments")
-    file = models.FileField(upload_to="") # I'll add path later
+    file = models.FileField(upload_to="post_attachments/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

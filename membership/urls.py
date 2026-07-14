@@ -4,6 +4,6 @@ from .views import MembershipViewSet
 
 
 router = SimpleRouter()
-router.register(r"", MembershipViewSet)
+router.register(r"", MembershipViewSet, basename="organization")
 
 urlpatterns = router.urls

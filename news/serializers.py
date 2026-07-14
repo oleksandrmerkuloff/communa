@@ -52,7 +52,7 @@ class PostWriterSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             instance = super().update(instance, validated_data)
 
-            if tags :
+            if tags:
                 instance.tags.set(tags)
             
             if attachments_data:
