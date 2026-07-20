@@ -1,10 +1,10 @@
-from rest_framework.routers import SimpleRouter
+# from rest_framework.routers import SimpleRouter
 
-from .views import PetitionViewSet, VoteViewSet
+# from .views import PetitionViewSet, VoteViewSet
 
 
-router = SimpleRouter()
-router.register("", PetitionViewSet)
-router.register("votes", VoteViewSet)
+# router = SimpleRouter()
+# router.register("", PetitionViewSet)
+# router.register("votes", VoteViewSet)
 
-urlpatterns = router.urls
+# urlpatterns = router.urls
