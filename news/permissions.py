@@ -33,14 +33,14 @@ class CanCreateNews(permissions.BasePermission):
 
 
 class CanEditNews(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method != "Patch" and request.method != "PUT":
+    def has_object_permission(self, request, view, obj):
+        if request.method != "DELETE":
             return False
         
         member = get_membership(
             user=request.user,
-            organization_id=request.data.get("organization")
-            )
+            organization_id=obj.organization.id
+        )
 
         if not member:
             return False
@@ -85,14 +85,14 @@ class CanCreateTags(permissions.BasePermission):
 
 
 class CanEditTags(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method not in ("PATCH", "PUT"):
+    def has_object_permission(self, request, view, obj):
+        if request.method != "DELETE":
             return False
         
         member = get_membership(
             user=request.user,
-            organization_id=request.data.get("organization")
-            )
+            organization_id=obj.organization.id
+        )
 
         if not member:
             return False
