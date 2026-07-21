@@ -19,17 +19,6 @@ class TagViewSet(ModelViewSet):
         return TagSerializer
 
 
-class NewsAttachmentViewSet(ModelViewSet):
-    queryset =  NewsAttachment.objects.all()
-    serializer_class = NewsAttachmentSerializer
-
-    def get_queryset(self):
-        return (
-            NewsAttachment.objects
-            .select_related("post")
-        )
-
-
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
 
