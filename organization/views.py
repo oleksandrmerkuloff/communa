@@ -7,6 +7,14 @@ from .serializers import OrganizationWriterSerializer, OrganizationReaderSeriali
 class OrganizationViewSet(ModelViewSet):
     queryset = Organization.objects.all()
 
+    def get_queryset(self):
+        return (
+            Organization.objects
+            .filter(memberships__member=self.request.user)
+            .distinct()
+        )
+        
+
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
             return OrganizationReaderSerializer

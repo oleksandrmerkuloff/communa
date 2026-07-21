@@ -10,6 +10,7 @@ class MembershipViewSet(ModelViewSet):
     def get_queryset(self):
         return (
             Membership.objects
+            .filter(member=self.request.user)
             .select_related("member", "organization")
         )
     

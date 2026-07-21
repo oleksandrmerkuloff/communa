@@ -33,7 +33,7 @@ class CanCreateMembership(permissions.BasePermission):
 
 class CanEditMembership(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method != "Patch" and request.method != "PUT":
+        if request.method != "PATCH" and request.method != "PUT":
             return False
         
         member = get_membership(

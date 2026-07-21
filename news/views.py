@@ -10,7 +10,9 @@ class TagViewSet(ModelViewSet):
     def get_queryset(self):
         return (
             Tag.objects
+            .filter(organization__memberships__member=self.request.user)
             .select_related("organization")
+            .distinct()
         )
 
     def get_serializer_class(self):
@@ -25,8 +27,10 @@ class PostViewSet(ModelViewSet):
     def get_queryset(self):
         return (
             Post.objects
+            .filter(organization__memberships__member=self.request.user)
             .select_related("organization")
             .prefetch_related("tags", "attachments")
+            .distinct()
         )
 
     def get_serializer_class(self):

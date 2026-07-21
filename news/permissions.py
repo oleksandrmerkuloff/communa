@@ -34,7 +34,7 @@ class CanCreateNews(permissions.BasePermission):
 
 class CanEditNews(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method != "DELETE":
+        if request.method not in ("PATCH", "PUT",):
             return False
         
         member = get_membership(

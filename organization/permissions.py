@@ -32,7 +32,7 @@ class CanDeleteOrganization(permissions.BasePermission):
         
         member = get_membership(
             user=request.user,
-            organization_id=obj.organization.id
+            organization_id=obj.id
         )
 
         if not member:
