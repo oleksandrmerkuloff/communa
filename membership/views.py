@@ -2,10 +2,24 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Membership
 from .serializers import MembershipReaderSerializer, MembershipWriterSerializer
+from .permissions import CanCreateMembership, CanViewMembership, CanEditMembership, CanDeleteMembership
 
 
 class MembershipViewSet(ModelViewSet):
     queryset = Membership.objects.all()
+
+    def get_permissions(self):
+        if self.action in ("list", "retrieve"):
+            self.permission_classes = [CanViewMembership]
+        elif self.action == "create":
+            self.permission_classes = [CanCreateMembership]
+        elif self.action in ("update", "partial_update"):
+            self.permission_classes = [CanEditMembership]
+        elif self.action == "destroy":
+            permission_classes = [CanDeleteMembership]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         return (
