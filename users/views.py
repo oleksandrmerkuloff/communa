@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 from .models import User
 from .serializers import (
@@ -16,19 +16,42 @@ from .serializers import (
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
 
-    def get_serializer_class(self):
-        if self.action in ("list", "retrieve"):
-            return UserReaderSerializer
-        return UserWriterSerializer
+    http_method_names = [
+        "get",
+        "post",
+        "patch",
+        "delete",
+    ]
 
-    @action(detail=False, methods=["get", "patch", "delete"], permission_classes=[IsAuthenticated])
+    def get_permissions(self):
+        if self.action == "create":
+            return [AllowAny()]
+        if self.action in ("me", "change_password"):
+            return [IsAuthenticated()]
+
+        return [IsAdminUser()]
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return UserWriterSerializer
+
+        if self.action == "me":
+            if self.request.method == "PATCH":
+                return UpdateUserSerializer
+            return UserReaderSerializer
+
+        if self.action == "change_password":
+            return ChangePasswordSerializer
+
+        return UserReaderSerializer
+
+    @action(detail=False, methods=["get", "patch", "delete"])
     def me(self, request):
-        # Maybe later change from action to independant view for "me" path
         if request.method == "GET":
-            serializer = UserReaderSerializer(request.user)
+            serializer = self.get_serializer(request.user)
             return Response(serializer.data)
         elif request.method == "PATCH":
-            serializer = UpdateUserSerializer(
+            serializer = self.get_serializer(
                 request.user,
                 data=request.data,
                 partial=True
@@ -38,12 +61,9 @@ class UserViewSet(ModelViewSet):
             return Response(serializer.data)
         user = request.user
         user.delete()
-        return Response(
-            {"message": "Your account has been deleted successfully."},
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods="post", permission_classes=[IsAuthenticated], url_path="change-password")
+    @action(detail=False, methods=["post",], url_path="change-password")
     def change_password(self, request):
         serializer = ChangePasswordSerializer(
             data=request.data,
