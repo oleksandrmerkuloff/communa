@@ -48,13 +48,6 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name"
         )
-    
-    def update(self, instance, validated_data):
-        password = validated_data.pop("password", "")
-        if password:
-            instance.set_password(password)
-            instance.save()
-        return super().update(instance, validated_data)
 
 
 class ChangePasswordSerializer(serializers.Serializer):

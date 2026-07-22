@@ -5,9 +5,10 @@ from membership.services import get_membership
 
 
 # Actually I don't know if I need to make this perm right now bcs user need to be only auth
+# This class is just a plug
 class CanCreateOrganization(permissions.BasePermission):
-    pass
-
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
 
 class CanEditOrganization(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

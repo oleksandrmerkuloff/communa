@@ -16,10 +16,10 @@ class MembershipViewSet(ModelViewSet):
         elif self.action in ("update", "partial_update"):
             self.permission_classes = [CanEditMembership]
         elif self.action == "destroy":
-            permission_classes = [CanDeleteMembership]
+            self.permission_classes = [CanDeleteMembership]
         else:
-            permission_classes = []
-        return [permission() for permission in permission_classes]
+            self.permission_classes = []
+        return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
         return (
