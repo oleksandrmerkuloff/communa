@@ -1,3 +1,5 @@
+import re
+
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 
@@ -37,6 +39,20 @@ class UserWriterSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password")
         return User.objects.create_user(**validated_data, password=password)
 
+    def validate_email(self, value):
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+        if re.fullmatch(pattern, value):
+            return value
+        return serializers.ValidationError("Wrong email address.")
+
+    def validate_phone_number(self, value):
+        pattern = r"^(?:\+38)?(?:\(0\d{2}\)|0\d{2})\d{7}$"
+
+        if re.fullmatch(pattern, value):
+            return value
+
+        return serializers.ValidationError("Wrong phone number.")
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     # add later validate email and phone_number
@@ -48,6 +64,14 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name"
         )
+
+    def validate_phone_number(self, value):
+        pattern = r"^(?:\+38)?(?:\(0\d{2}\)|0\d{2})\d{7}$"
+
+        if re.fullmatch(pattern, value):
+            return value
+
+        raise serializers.ValidationError("Wrong phone number.")
 
 
 class ChangePasswordSerializer(serializers.Serializer):
