@@ -6,6 +6,7 @@ from .models import Organization
 class OrganizationAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
     list_display = [
+        "id",
         "name",
         "city",
         "post_index",

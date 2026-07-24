@@ -28,7 +28,7 @@ class Membership(models.Model):
     organization = models.ForeignKey(Organization, related_name="memberships", on_delete=models.CASCADE)
 
     def __str__(self):
-        full_name = self.member.get_full_name()
+        full_name = self.member.get_email_field_name()
         return f"{full_name} ({self.organization.name})"
 
     class Meta:

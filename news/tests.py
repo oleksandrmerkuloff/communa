@@ -10,7 +10,7 @@ from .models import Tag
 class TagAPITest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="head.test.com",
+            email="head@test.com",
             phone_number="+380501112233",
             first_name="Head",
             last_name="User",

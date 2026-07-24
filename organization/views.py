@@ -1,8 +1,12 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
+from rest_framework import status
+from django.db import transaction
 
 from .models import Organization
 from .serializers import OrganizationWriterSerializer, OrganizationReaderSerializer
 from .permissions import CanCreateOrganization, CanEditOrganization, CanDeleteOrganization
+from membership.models import Membership
 
 
 class OrganizationViewSet(ModelViewSet):
@@ -26,8 +30,20 @@ class OrganizationViewSet(ModelViewSet):
             .distinct()
         )
         
-
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
             return OrganizationReaderSerializer
         return OrganizationWriterSerializer
+
+    def perform_create(self, serializer):
+        apartment_number = self.request.data.get("apartment_number")
+    
+        with transaction.atomic():
+            organization = serializer.save()
+    
+            Membership.objects.create(
+                member=self.request.user,
+                organization=organization,
+                apartment_number=apartment_number,
+                role=Membership.MemberRole.HEAD,
+            )
