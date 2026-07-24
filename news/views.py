@@ -50,6 +50,9 @@ class PostViewSet(ModelViewSet):
             return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Post.objects.none()
+
         return (
             Post.objects
             .filter(organization__memberships__member=self.request.user)

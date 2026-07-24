@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from users.models import User
 from organization.models import Organization
 from membership.models import Membership
-from .models import Tag
+from news.models import Tag
 
 
 class TagAPITest(APITestCase):

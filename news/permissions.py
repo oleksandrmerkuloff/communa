@@ -20,6 +20,9 @@ class CanCreateNews(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST":
             return False
+
+        if not request.user.is_authenticated:
+            return False
         
         member = get_membership(
             user=request.user,
@@ -36,7 +39,7 @@ class CanEditNews(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in ("PATCH", "PUT",):
             return False
-        
+
         member = get_membership(
             user=request.user,
             organization_id=obj.organization.id
@@ -52,7 +55,7 @@ class CanDeleteNews(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method != "DELETE":
             return False
-        
+
         member = get_membership(
             user=request.user,
             organization_id=obj.organization.id

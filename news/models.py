@@ -31,7 +31,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=1, choices=PostStatus, default=PostStatus.DRAFT)
     views = models.PositiveIntegerField(blank=True, default=0)
-    tags = models.ManyToManyField(Tag, related_name="posts")
+    tags = models.ManyToManyField(Tag, related_name="posts", blank=True)
     organization = models.ForeignKey(Organization, related_name="posts", on_delete=models.CASCADE)
 
     def __str__(self) -> str:

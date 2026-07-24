@@ -72,9 +72,9 @@ class PostWriterSerializer(serializers.ModelSerializer):
                         new_att = NewsAttachment.objects.create(post=instance, **attachment_item)
                         keep_attachment_ids.append(new_att.id)
 
-            for att_id, att_instance in existing_attachments.items():
-                if att_id not in keep_attachment_ids:
-                    att_instance.delete()
+                for att_id, att_instance in existing_attachments.items():
+                    if att_id not in keep_attachment_ids:
+                        att_instance.delete()
 
         return instance
 
