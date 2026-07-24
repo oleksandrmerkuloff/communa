@@ -22,9 +22,12 @@ class MembershipViewSet(ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Membership.objects.none()
+
         return (
             Membership.objects
-            .filter(member=self.request.user)
+            .filter(organization__memberships__member=self.request.user)
             .select_related("member", "organization")
         )
     

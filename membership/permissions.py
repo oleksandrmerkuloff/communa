@@ -6,6 +6,8 @@ from .services import get_membership
 
 class CanViewMembership(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated:
+            return False
         if request.method not in permissions.SAFE_METHODS:
             return False
         
@@ -18,6 +20,9 @@ class CanViewMembership(permissions.BasePermission):
 class CanCreateMembership(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST":
+            return False
+
+        if not request.user.is_authenticated:
             return False
         
         member = get_membership(
@@ -32,14 +37,18 @@ class CanCreateMembership(permissions.BasePermission):
 
 
 class CanEditMembership(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method != "PATCH" and request.method != "PUT":
+    def has_object_permission(self, request, view, obj):
+
+        if request.method not in ("PUT", "PATCH"):
             return False
-        
+
+        if not request.user.is_authenticated:
+            return False
+
         member = get_membership(
             user=request.user,
-            organization_id=request.data.get("organization")
-            )
+            organization_id=obj.organization.id
+        )
 
         if not member:
             return False
@@ -51,7 +60,7 @@ class CanDeleteMembership(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method != "DELETE":
             return False
-        
+
         member = get_membership(
             user=request.user,
             organization_id=obj.organization.id
