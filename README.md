@@ -1,47 +1,63 @@
 # Communa
 
-Communa is a communication and management platform for residential organizations (OSBB / HOA).
+Communa is a backend platform for Homeowners Associations (HOAs / ОСББ) that provides a centralized system for managing organizations, members, news, and petitions.
 
-The project is currently in MVP stage and is being developed as a modular monolith using Django REST Framework.
-
-## Features
-
-Current implemented modules:
-
-- Authentication (JWT)
-- Users
-- Organizations
-- Membership management
-- News system
-    - Posts
-    - Tags
-    - Attachments
-
-Planned modules:
-
-- Petitions
-- Role-Based Access Control (RBAC)
-- Financial management
-- Voting
-- Notifications
+This repository contains the MVP version of the project built with Django REST Framework.
 
 ---
 
-# Tech Stack
+# Features
 
-Backend
+## Authentication
 
-- Python 3.14
-- Django 6
-- Django REST Framework
-- PostgreSQL
-- JWT Authentication (SimpleJWT)
+* JWT Authentication
+* Access & Refresh Tokens
+* Token Rotation
+* Token Blacklisting
+* Custom User Model
 
-Planned
+## Organizations
 
-- Docker
-- Redis
-- Celery
+* Create organizations
+* Retrieve organization information
+* Update organization data
+* Delete organizations
+
+## Membership
+
+* Join organization
+* Member management
+* Role system (MVP)
+
+  * Head
+  * Resident
+
+## News
+
+* Create news
+* Update news
+* Delete news
+* Tags
+* Attachments
+* Draft / Published / Archived statuses
+
+## Petitions
+
+* Create petitions
+* Retrieve petitions
+* Update petitions
+* Delete petitions
+
+---
+
+# Technology Stack
+
+* Python 3.14
+* Django 6
+* Django REST Framework
+* PostgreSQL
+* Docker
+* JWT (SimpleJWT)
 
 ---
 
@@ -49,289 +65,138 @@ Planned
 
 ```
 core/
-    Project configuration
-
 users/
-    User model
-    Authentication
-    Profile management
-
 organization/
-    Organization management
-
 membership/
-    User memberships
-    Organization roles
-
 news/
-    Posts
-    Tags
-    Attachments
-
 petitions/
-    (In development)
+
+manage.py
+Dockerfile
+docker-compose.yml
+pyproject.toml
 ```
 
 ---
 
-# Installation
+# Running with Docker
 
-Clone repository
+## 1. Clone repository
 
 ```bash
 git clone <repository_url>
-
 cd communa
 ```
 
-Create virtual environment
+## 2. Create environment file
 
-```bash
-python -m venv .venv
-```
-
-Activate
-
-Linux
-
-```bash
-source .venv/bin/activate
-```
-
-Windows
-
-```powershell
-.venv\Scripts\activate
-```
-
-Install dependencies
-
-```bash
-pip install -e .
-```
-
----
-
-# Environment variables
-
-Create `.env`
+Create a `.env` file based on `.env.example`.
 
 Example:
 
 ```env
 SECRET_KEY=your_secret_key
 
-DB_NAME=communa
+DB_NAME=communa-db
 DB_USER=postgres
-DB_PASSWORD=password
-DB_HOST=localhost
+DB_PASSWORD=postgres
+DB_HOST=db
 DB_PORT=5432
 ```
 
----
-
-# Database
-
-Create migrations
+## 3. Build containers
 
 ```bash
-python manage.py makemigrations
+docker compose up --build
 ```
 
-Apply migrations
+Django will automatically:
+
+* apply migrations
+* collect static files
+* start the development server
+
+---
+
+# Development Server
+
+```
+http://localhost:8000/
+```
+
+Admin:
+
+```
+http://localhost:8000/admin/
+```
+
+---
+
+# Running Tests
 
 ```bash
-python manage.py migrate
+docker compose run --rm web python manage.py test
 ```
 
-Create superuser
-
-```bash
-python manage.py createsuperuser
-```
-
----
-
-# Running
-
-```bash
-python manage.py runserver
-```
-
-API
-
-```
-http://127.0.0.1:8000/
-```
-
-Admin
-
-```
-http://127.0.0.1:8000/admin/
-```
-
----
-
-# Authentication
-
-Login
-
-```
-POST /api/auth/login/
-```
-
-Refresh token
-
-```
-POST /api/auth/refresh/
-```
-
-Logout (Blacklist refresh token)
-
-```
-POST /api/auth/logout/
-```
-
----
-
-# API Modules
-
-## Users
-
-```
-/api/users/
-```
-
-Supports:
-
-- registration
-- profile
-- update profile
-- delete account
-- password changing
-
----
-
-## Organizations
-
-```
-/api/organizations/
-```
-
-Supports:
-
-- CRUD operations
-
----
-
-## Memberships
-
-```
-/api/memberships/
-```
-
-Supports:
-
-- create member
-- update member
-- remove member
-- list organization members
-
----
-
-## News
-
-```
-/api/news/
-```
-
-Supports:
-
-- CRUD posts
-- CRUD tags
-- attachments
-
----
-
-# Permissions
-
-The project uses custom DRF permissions.
-
-Current role hierarchy:
-
-```
-Head
-│
-Vice Head
-│
-Accountant
-│
-Secretary
-│
-Resident
-```
-
-Residents have read-only access.
-
-Higher roles can create and manage content.
-
-RBAC with configurable permissions is planned after MVP.
-
----
-
-# Tests
-
-Run all tests
+or locally
 
 ```bash
 python manage.py test
 ```
 
-Run module tests
+---
 
-```bash
-python manage.py test news
+# API Authentication
+
+Obtain JWT tokens:
+
+```
+POST /api/token/
+```
+
+Refresh token:
+
+```
+POST /api/token/refresh/
+```
+
+Logout (blacklist refresh token):
+
+```
+POST /api/token/logout/
 ```
 
 ---
 
-# Roadmap
+# Current MVP Modules
 
-Current priority:
+* Users
+* Organizations
+* Membership
+* News
+* Petitions
 
-- Finish MVP
-- Docker support
-- Frontend integration
+---
 
-Next phase:
+# Planned Features
 
-- Petitions
-- RBAC
-- Refactoring
-- Financial module
-- Voting
+The project will continue development after the MVP.
+
+Planned features include:
+
+* Role-Based Access Control (RBAC)
+* Voting System
+* Financial Management
+* Redis
+* Celery
+* Email Notifications
+* OpenAPI / Swagger Documentation
+* CI/CD
+* Production Deployment
+* Microservice migration (when necessary)
 
 ---
 
 # License
 
-Educational / Personal project.
-
-```
-
----
-
-I would only change two things before committing this:
-
-1. **Add Docker section tomorrow** after you actually create `Dockerfile` and `docker-compose.yml`.
-2. Replace
-
-```text
-git clone <repository_url>
-```
-
-with your actual GitHub repository.
-
----
-
-Overall, this is exactly the level of README I'd expect from a strong junior or junior+ backend developer delivering an MVP to another teammate. Later, when Communa becomes a public/open-source project or gains external contributors, you can expand it with architecture diagrams, ER diagrams, API documentation, and contribution guidelines.
+This project is currently intended for educational and portfolio purposes.
