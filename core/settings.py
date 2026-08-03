@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'organization.apps.OrganizationConfig',
     'membership.apps.MembershipConfig',
     'news.apps.NewsConfig',
+    'accounting.apps.AccountingConfig',
     'petitions.apps.PetitionsConfig'
 ]
 
