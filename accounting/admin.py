@@ -1,9 +1,10 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 
 from .models import Budget, Category, AccountingAttachment, Expense, Income
 
 
-class AccountingAttachmentInline(admin.TabularInline):
+class AccountingAttachmentInline(GenericTabularInline):
     model = AccountingAttachment
     extra = 1
 
