@@ -5,6 +5,7 @@ from .models import Organization
 
 class OrganizationReaderSerializer(serializers.ModelSerializer):
     address = serializers.ReadOnlyField()
+
     class Meta:
         model = Organization
         fields = "__all__"
@@ -14,4 +15,11 @@ class OrganizationReaderSerializer(serializers.ModelSerializer):
 class OrganizationWriterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
-        fields = ["name", "country", "city", "street_address", "post_index", "description"]
+        fields = [
+            "name",
+            "country",
+            "city",
+            "street_address",
+            "post_index",
+            "description",
+        ]

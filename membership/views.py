@@ -2,7 +2,12 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Membership
 from .serializers import MembershipReaderSerializer, MembershipWriterSerializer
-from .permissions import CanCreateMembership, CanViewMembership, CanEditMembership, CanDeleteMembership
+from .permissions import (
+    CanCreateMembership,
+    CanViewMembership,
+    CanEditMembership,
+    CanDeleteMembership,
+)
 
 
 class MembershipViewSet(ModelViewSet):
@@ -25,12 +30,10 @@ class MembershipViewSet(ModelViewSet):
         if not self.request.user.is_authenticated:
             return Membership.objects.none()
 
-        return (
-            Membership.objects
-            .filter(organization__memberships__member=self.request.user)
-            .select_related("member", "organization")
-        )
-    
+        return Membership.objects.filter(
+            organization__memberships__member=self.request.user
+        ).select_related("member", "organization")
+
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
             return MembershipReaderSerializer

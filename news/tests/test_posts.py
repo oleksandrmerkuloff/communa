@@ -11,40 +11,34 @@ from news.models import Post
 
 
 class PostAPITest(APITestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(
             email="user@test.com",
             password="password123",
             first_name="John",
             last_name="Doe",
-            phone_number="+380991112233"
+            phone_number="+380991112233",
         )
 
         login = self.client.post(
             reverse("token_obtain_pair"),
-            {
-                "email": "user@test.com",
-                "password": "password123"
-            }
+            {"email": "user@test.com", "password": "password123"},
         )
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {login.data['access']}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {login.data['access']}")
 
         self.organization = Organization.objects.create(
             name="Test Organization",
             city="Kyiv",
             street_address="Main street 12",
-            post_index="02000"
+            post_index="02000",
         )
 
         Membership.objects.create(
             member=self.user,
             organization=self.organization,
             apartment_number=1,
-            role=Membership.MemberRole.HEAD
+            role=Membership.MemberRole.HEAD,
         )
 
         self.url = reverse("post-list")
@@ -53,7 +47,7 @@ class PostAPITest(APITestCase):
         payload = {
             "title": "First news",
             "content": "Hello world",
-            "organization": self.organization.id
+            "organization": self.organization.id,
         }
 
         response = self.client.post(self.url, payload)
@@ -68,20 +62,14 @@ class PostAPITest(APITestCase):
         self.assertEqual(post.organization, self.organization)
 
     def test_create_post_without_title(self):
-        payload = {
-            "content": "Hello",
-            "organization": self.organization.id
-        }
+        payload = {"content": "Hello", "organization": self.organization.id}
 
         response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_post_without_organization(self):
-        payload = {
-            "title": "Hello",
-            "content": "World"
-        }
+        payload = {"title": "Hello", "content": "World"}
 
         response = self.client.post(self.url, payload)
 
@@ -89,9 +77,7 @@ class PostAPITest(APITestCase):
 
     def test_list_posts(self):
         Post.objects.create(
-            title="Post 1",
-            content="Content",
-            organization=self.organization
+            title="Post 1", content="Content", organization=self.organization
         )
 
         response = self.client.get(self.url)
@@ -101,35 +87,26 @@ class PostAPITest(APITestCase):
 
     def test_retrieve_post(self):
         post = Post.objects.create(
-            title="Post",
-            content="Content",
-            organization=self.organization
+            title="Post", content="Content", organization=self.organization
         )
 
-        response = self.client.get(
-            reverse("post-detail", args=[post.id])
-        )
+        response = self.client.get(reverse("post-detail", args=[post.id]))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], "Post")
 
     def test_update_post(self):
         post = Post.objects.create(
-            title="Old",
-            content="Old content",
-            organization=self.organization
+            title="Old", content="Old content", organization=self.organization
         )
 
         payload = {
             "title": "New",
             "content": "New content",
-            "organization": self.organization.id
+            "organization": self.organization.id,
         }
 
-        response = self.client.put(
-            reverse("post-detail", args=[post.id]),
-            payload
-        )
+        response = self.client.put(reverse("post-detail", args=[post.id]), payload)
 
         post.refresh_from_db()
 
@@ -138,16 +115,11 @@ class PostAPITest(APITestCase):
 
     def test_partial_update_post(self):
         post = Post.objects.create(
-            title="Old",
-            content="Content",
-            organization=self.organization
+            title="Old", content="Content", organization=self.organization
         )
 
         response = self.client.patch(
-            reverse("post-detail", args=[post.id]),
-            {
-                "title": "Updated"
-            }
+            reverse("post-detail", args=[post.id]), {"title": "Updated"}
         )
 
         post.refresh_from_db()
@@ -158,22 +130,16 @@ class PostAPITest(APITestCase):
 
     def test_delete_post(self):
         post = Post.objects.create(
-            title="Delete",
-            content="Content",
-            organization=self.organization
+            title="Delete", content="Content", organization=self.organization
         )
 
-        response = self.client.delete(
-            reverse("post-detail", args=[post.id])
-        )
+        response = self.client.delete(reverse("post-detail", args=[post.id]))
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Post.objects.count(), 0)
 
     def test_post_not_found(self):
-        response = self.client.get(
-            reverse("post-detail", args=[uuid4()])
-        )
+        response = self.client.get(reverse("post-detail", args=[uuid4()]))
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -183,7 +149,7 @@ class PostAPITest(APITestCase):
         payload = {
             "title": "Post",
             "content": "Content",
-            "organization": self.organization.id
+            "organization": self.organization.id,
         }
 
         response = self.client.post(self.url, payload)
@@ -192,33 +158,24 @@ class PostAPITest(APITestCase):
 
     def test_unauthorized_update_post(self):
         post = Post.objects.create(
-            title="Old",
-            content="Content",
-            organization=self.organization
+            title="Old", content="Content", organization=self.organization
         )
 
         self.client.credentials()
 
         response = self.client.patch(
-            reverse("post-detail", args=[post.id]),
-            {
-                "title": "New"
-            }
+            reverse("post-detail", args=[post.id]), {"title": "New"}
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_unauthorized_delete_post(self):
         post = Post.objects.create(
-            title="Delete",
-            content="Content",
-            organization=self.organization
+            title="Delete", content="Content", organization=self.organization
         )
 
         self.client.credentials()
 
-        response = self.client.delete(
-            reverse("post-detail", args=[post.id])
-        )
+        response = self.client.delete(reverse("post-detail", args=[post.id]))
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

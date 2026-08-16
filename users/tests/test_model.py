@@ -3,14 +3,13 @@ from users.models import User
 
 
 class UserModelTest(TestCase):
-
     def test_create_user(self):
         user = User.objects.create_user(
             email="user@test.com",
             password="password123",
             first_name="John",
             last_name="Doe",
-            phone_number="+380991112233"
+            phone_number="+380991112233",
         )
 
         self.assertEqual(user.email, "user@test.com")
@@ -24,7 +23,7 @@ class UserModelTest(TestCase):
             password="password123",
             first_name="Eva",
             last_name="Adams",
-            phone_number="+380991112234"
+            phone_number="+380991112234",
         )
 
         self.assertTrue(admin.is_staff)
@@ -36,7 +35,7 @@ class UserModelTest(TestCase):
             password="password123",
             first_name="John",
             last_name="Doe",
-            phone_number="+380991112233"
+            phone_number="+380991112233",
         )
 
         self.assertEqual(user.email, "TEST@mail.com")

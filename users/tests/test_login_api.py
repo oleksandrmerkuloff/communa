@@ -5,7 +5,6 @@ from users.models import User
 
 
 class LoginTest(APITestCase):
-
     def setUp(self):
         self.url = reverse("token_obtain_pair")
 
@@ -14,31 +13,28 @@ class LoginTest(APITestCase):
             password="password123",
             first_name="John",
             last_name="Doe",
-            phone_number="+380991112233"
+            phone_number="+380991112233",
         )
 
     def test_login(self):
-        response = self.client.post(self.url,{
-            "email":"user@test.com",
-            "password":"password123"
-        })
+        response = self.client.post(
+            self.url, {"email": "user@test.com", "password": "password123"}
+        )
 
-        self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertIn("access",response.data)
-        self.assertIn("refresh",response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access", response.data)
+        self.assertIn("refresh", response.data)
 
     def test_wrong_password(self):
-        response = self.client.post(self.url,{
-            "email":"user@test.com",
-            "password":"wrong"
-        })
+        response = self.client.post(
+            self.url, {"email": "user@test.com", "password": "wrong"}
+        )
 
-        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_wrong_email(self):
-        response = self.client.post(self.url,{
-            "email":"wrong@test.com",
-            "password":"password123"
-        })
+        response = self.client.post(
+            self.url, {"email": "wrong@test.com", "password": "password123"}
+        )
 
-        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

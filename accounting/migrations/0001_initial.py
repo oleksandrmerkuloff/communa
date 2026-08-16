@@ -6,117 +6,250 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('organization', '0001_initial'),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("organization", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='organization.organization')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=30)),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="categories",
+                        to="organization.organization",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Category',
-                'verbose_name_plural': 'Categories',
-                'ordering': ['name'],
+                "verbose_name": "Category",
+                "verbose_name_plural": "Categories",
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Budget',
+            name="Budget",
             fields=[
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('planned_amount', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('year', models.PositiveSmallIntegerField()),
-                ('month', models.IntegerField(choices=[(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')])),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='budgets', to='organization.organization')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='budgets', to='accounting.category')),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "planned_amount",
+                    models.DecimalField(decimal_places=2, max_digits=12),
+                ),
+                ("year", models.PositiveSmallIntegerField()),
+                (
+                    "month",
+                    models.IntegerField(
+                        choices=[
+                            (1, "January"),
+                            (2, "February"),
+                            (3, "March"),
+                            (4, "April"),
+                            (5, "May"),
+                            (6, "June"),
+                            (7, "July"),
+                            (8, "August"),
+                            (9, "September"),
+                            (10, "October"),
+                            (11, "November"),
+                            (12, "December"),
+                        ]
+                    ),
+                ),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="budgets",
+                        to="organization.organization",
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="budgets",
+                        to="accounting.category",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Budget',
-                'verbose_name_plural': 'Budgets',
-                'ordering': ['-year', '-month'],
+                "verbose_name": "Budget",
+                "verbose_name_plural": "Budgets",
+                "ordering": ["-year", "-month"],
             },
         ),
         migrations.CreateModel(
-            name='Expense',
+            name="Expense",
             fields=[
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('date', models.DateField()),
-                ('description', models.TextField(blank=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='expenses', to='accounting.category')),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='expenses', to='organization.organization')),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=12)),
+                ("date", models.DateField()),
+                ("description", models.TextField(blank=True)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="expenses",
+                        to="accounting.category",
+                    ),
+                ),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="expenses",
+                        to="organization.organization",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Expense',
-                'verbose_name_plural': 'Expenses',
-                'ordering': ['-date', '-created_at'],
+                "verbose_name": "Expense",
+                "verbose_name_plural": "Expenses",
+                "ordering": ["-date", "-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='Income',
+            name="Income",
             fields=[
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=12)),
-                ('date', models.DateField()),
-                ('description', models.TextField(blank=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='incomes', to='accounting.category')),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='incomes', to='organization.organization')),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=12)),
+                ("date", models.DateField()),
+                ("description", models.TextField(blank=True)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="incomes",
+                        to="accounting.category",
+                    ),
+                ),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="incomes",
+                        to="organization.organization",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Income',
-                'verbose_name_plural': 'Incomes',
-                'ordering': ['-date', '-created_at'],
+                "verbose_name": "Income",
+                "verbose_name_plural": "Incomes",
+                "ordering": ["-date", "-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='AccountingAttachment',
+            name="AccountingAttachment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('file', models.FileField(upload_to='accounting/%Y/%m/')),
-                ('object_id', models.UUIDField()),
-                ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.contenttype')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("file", models.FileField(upload_to="accounting/%Y/%m/")),
+                ("object_id", models.UUIDField()),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="contenttypes.contenttype",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Attachment',
-                'verbose_name_plural': 'Attachments',
-                'ordering': ['-created_at'],
-                'indexes': [models.Index(fields=['content_type', 'object_id'], name='accounting__content_6c352f_idx')],
+                "verbose_name": "Attachment",
+                "verbose_name_plural": "Attachments",
+                "ordering": ["-created_at"],
+                "indexes": [
+                    models.Index(
+                        fields=["content_type", "object_id"],
+                        name="accounting__content_6c352f_idx",
+                    )
+                ],
             },
         ),
         migrations.AddConstraint(
-            model_name='category',
-            constraint=models.UniqueConstraint(fields=('name', 'organization'), name='unique_organization_accounting_category_constraint'),
+            model_name="category",
+            constraint=models.UniqueConstraint(
+                fields=("name", "organization"),
+                name="unique_organization_accounting_category_constraint",
+            ),
         ),
         migrations.AddIndex(
-            model_name='budget',
-            index=models.Index(fields=['organization', 'year', 'month'], name='accounting__organiz_733d2c_idx'),
+            model_name="budget",
+            index=models.Index(
+                fields=["organization", "year", "month"],
+                name="accounting__organiz_733d2c_idx",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='budget',
-            constraint=models.UniqueConstraint(fields=('organization', 'category', 'year', 'month'), name='unique_budget_period_constraint'),
+            model_name="budget",
+            constraint=models.UniqueConstraint(
+                fields=("organization", "category", "year", "month"),
+                name="unique_budget_period_constraint",
+            ),
         ),
         migrations.AddIndex(
-            model_name='expense',
-            index=models.Index(fields=['organization', 'date'], name='accounting__organiz_03848f_idx'),
+            model_name="expense",
+            index=models.Index(
+                fields=["organization", "date"], name="accounting__organiz_03848f_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='income',
-            index=models.Index(fields=['organization', 'date'], name='accounting__organiz_3b3903_idx'),
+            model_name="income",
+            index=models.Index(
+                fields=["organization", "date"], name="accounting__organiz_3b3903_idx"
+            ),
         ),
     ]

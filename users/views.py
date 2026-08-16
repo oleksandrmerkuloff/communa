@@ -9,7 +9,7 @@ from .serializers import (
     UserReaderSerializer,
     UserWriterSerializer,
     ChangePasswordSerializer,
-    UpdateUserSerializer
+    UpdateUserSerializer,
 )
 
 
@@ -52,9 +52,7 @@ class UserViewSet(ModelViewSet):
             return Response(serializer.data)
         elif request.method == "PATCH":
             serializer = self.get_serializer(
-                request.user,
-                data=request.data,
-                partial=True
+                request.user, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -63,7 +61,13 @@ class UserViewSet(ModelViewSet):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=["post",], url_path="change-password")
+    @action(
+        detail=False,
+        methods=[
+            "post",
+        ],
+        url_path="change-password",
+    )
     def change_password(self, request):
         serializer = ChangePasswordSerializer(
             data=request.data,

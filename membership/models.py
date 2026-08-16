@@ -17,15 +17,21 @@ class Membership(models.Model):
         ACCOUNTANT = "A", _("Accountant")
         VICE_HEAD = "V", _("Vice Head")
         HEAD = "H", _("Head")
-    
+
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    role = models.CharField(max_length=1, choices=MemberRole, default=MemberRole.RESIDENT)
+    role = models.CharField(
+        max_length=1, choices=MemberRole.choices, default=MemberRole.RESIDENT
+    )
     apartment_number = models.PositiveSmallIntegerField()
     can_vote = models.BooleanField(default=True)
     registered_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    member = models.ForeignKey(User, related_name="memberships", on_delete=models.CASCADE)
-    organization = models.ForeignKey(Organization, related_name="memberships", on_delete=models.CASCADE)
+    member = models.ForeignKey(
+        User, related_name="memberships", on_delete=models.CASCADE
+    )
+    organization = models.ForeignKey(
+        Organization, related_name="memberships", on_delete=models.CASCADE
+    )
 
     def __str__(self):
         full_name = self.member.get_email_field_name()
@@ -36,8 +42,8 @@ class Membership(models.Model):
         verbose_name_plural = "Members"
         ordering = ["organization", "role", "-registered_at"]
         constraints = [
-        models.UniqueConstraint(
-            fields=["member", "organization"],
-            name="unique_member_organization",
-        )
-    ]
+            models.UniqueConstraint(
+                fields=["member", "organization"],
+                name="unique_member_organization",
+            )
+        ]

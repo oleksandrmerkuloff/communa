@@ -14,55 +14,40 @@ class CategoryAPITest(APITestCase):
             phone_number="+380501112233",
             first_name="Head",
             last_name="User",
-            password="password123"
+            password="password123",
         )
 
         self.organization = Organization.objects.create(
-            name="OSBB",
-            city="Kyiv",
-            street_address="Main street",
-            post_index="01001"
+            name="OSBB", city="Kyiv", street_address="Main street", post_index="01001"
         )
 
         Membership.objects.create(
             apartment_number=13,
             member=self.user,
             organization=self.organization,
-            role=Membership.MemberRole.HEAD
+            role=Membership.MemberRole.HEAD,
         )
 
         response = self.client.post(
-            "/api/auth/login/",
-            {
-                "email": "head@test.com",
-                "password": "password123"
-            }
+            "/api/auth/login/", {"email": "head@test.com", "password": "password123"}
         )
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {response.data['access']}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access']}")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_category(self):
-            response = self.client.post(
-                "/api/accounting/categories/",
-                {
-                    "name": "Important",
-                    "organization": str(self.organization.id)
-                }
-            )
-    
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.assertEqual(Category.objects.count(), 1)
-            self.assertEqual(Category.objects.first().name, "Important")
+        response = self.client.post(
+            "/api/accounting/categories/",
+            {"name": "Important", "organization": str(self.organization.id)},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Category.objects.count(), 1)
+        self.assertEqual(Category.objects.first().name, "Important")
 
     def test_list_of_categories(self):
-        Category.objects.create(
-            name="Finance",
-            organization=self.organization
-        )
+        Category.objects.create(name="Finance", organization=self.organization)
 
         response = self.client.get("/api/accounting/categories/")
 
@@ -71,15 +56,11 @@ class CategoryAPITest(APITestCase):
 
     def test_update_category(self):
         category = Category.objects.create(
-            name="Finance",
-            organization=self.organization
+            name="Finance", organization=self.organization
         )
 
         response = self.client.patch(
-            f"/api/accounting/categories/{category.id}/",
-            {
-                "name": "Updated"
-            }
+            f"/api/accounting/categories/{category.id}/", {"name": "Updated"}
         )
 
         category.refresh_from_db()
@@ -89,14 +70,10 @@ class CategoryAPITest(APITestCase):
 
     def test_delete_category(self):
         category = Category.objects.create(
-            name="Finance",
-            organization=self.organization
+            name="Finance", organization=self.organization
         )
 
-        response = self.client.delete(
-            f"/api/accounting/categories/{category.id}/"
-        )
+        response = self.client.delete(f"/api/accounting/categories/{category.id}/")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Category.objects.filter(id=category.id).exists())
-

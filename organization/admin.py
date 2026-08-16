@@ -5,15 +5,13 @@ from .models import Organization
 
 class OrganizationAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
-    list_display = [
-        "id",
+    list_display = ["id", "name", "city", "post_index", "created_at"]
+    list_display_links = [
         "name",
-        "city",
-        "post_index",
-        "created_at"
     ]
-    list_display_links = ["name",]
-    list_filter = ["city",]
+    list_filter = [
+        "city",
+    ]
     list_per_page = 50
     readonly_fields = ["created_at", "updated_at"]
     search_fields = ["name", "city", "post_index"]

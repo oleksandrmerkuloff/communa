@@ -6,61 +6,112 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('organization', '0001_initial'),
+        ("organization", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=50)),
-                ('content', models.TextField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('status', models.CharField(choices=[('D', 'Draft'), ('P', 'Published'), ('A', 'Archived')], default='D', max_length=1)),
-                ('views', models.PositiveIntegerField(blank=True, default=0)),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='posts', to='organization.organization')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("title", models.CharField(max_length=50)),
+                ("content", models.TextField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("D", "Draft"), ("P", "Published"), ("A", "Archived")],
+                        default="D",
+                        max_length=1,
+                    ),
+                ),
+                ("views", models.PositiveIntegerField(blank=True, default=0)),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="posts",
+                        to="organization.organization",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Post',
-                'verbose_name_plural': 'Posts',
-                'ordering': ['-created_at'],
+                "verbose_name": "Post",
+                "verbose_name_plural": "Posts",
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='NewsAttachment',
+            name="NewsAttachment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to='post_attachments/')),
-                ('uploaded_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attachments', to='news.post')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("file", models.FileField(upload_to="post_attachments/")),
+                ("uploaded_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "post",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="attachments",
+                        to="news.post",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'News Attachment',
-                'verbose_name_plural': 'News Attachments',
+                "verbose_name": "News Attachment",
+                "verbose_name_plural": "News Attachments",
             },
         ),
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
-                ('organization', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tags', to='organization.organization')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=15)),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tags",
+                        to="organization.organization",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Tag',
-                'verbose_name_plural': 'Tags',
+                "verbose_name": "Tag",
+                "verbose_name_plural": "Tags",
             },
         ),
         migrations.AddField(
-            model_name='post',
-            name='tags',
-            field=models.ManyToManyField(related_name='posts', to='news.tag'),
+            model_name="post",
+            name="tags",
+            field=models.ManyToManyField(related_name="posts", to="news.tag"),
         ),
     ]

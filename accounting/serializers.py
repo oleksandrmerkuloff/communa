@@ -15,7 +15,10 @@ class CategorySerializer(serializers.ModelSerializer):
 class CategoryShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ("id", "name",)
+        fields = (
+            "id",
+            "name",
+        )
 
 
 class AccountingAttachmentSerializer(serializers.ModelSerializer):
@@ -30,7 +33,14 @@ class BudgetWriterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Budget
-        fields = ("organization", "category", "planned_amount", "year", "month", "attachments")
+        fields = (
+            "organization",
+            "category",
+            "planned_amount",
+            "year",
+            "month",
+            "attachments",
+        )
 
     def create(self, validated_data):
         attachments_data = validated_data.pop("attachments", [])
@@ -39,7 +49,9 @@ class BudgetWriterSerializer(serializers.ModelSerializer):
             budget = Budget.objects.create(**validated_data)
 
             for attachment_data in attachments_data:
-                AccountingAttachment.objects.create(content_object=budget, **attachment_data)
+                AccountingAttachment.objects.create(
+                    content_object=budget, **attachment_data
+                )
 
         return budget
 
@@ -50,7 +62,9 @@ class BudgetWriterSerializer(serializers.ModelSerializer):
             instance = super().update(instance, validated_data)
 
             if attachments_data:
-                existing_attachments = {att.id: att for att in instance.attachments.all()}
+                existing_attachments = {
+                    att.id: att for att in instance.attachments.all()
+                }
                 keep_attachment_ids = []
 
                 for attachment_item in attachments_data:
@@ -65,7 +79,9 @@ class BudgetWriterSerializer(serializers.ModelSerializer):
                         att_instance.save()
                         keep_attachment_ids.append(att_instance.id)
                     else:
-                        new_att = AccountingAttachment.objects.create(content_object=instance, **attachment_item)
+                        new_att = AccountingAttachment.objects.create(
+                            content_object=instance, **attachment_item
+                        )
                         keep_attachment_ids.append(new_att.id)
 
                 for att_id, att_instance in existing_attachments.items():
@@ -90,19 +106,28 @@ class IncomeWriterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Income
-        fields = ("amount", "date", "description", "organization", "category", "attachments")
+        fields = (
+            "amount",
+            "date",
+            "description",
+            "organization",
+            "category",
+            "attachments",
+        )
 
     def create(self, validated_data):
-            attachments_data = validated_data.pop("attachments", [])
-    
-            with transaction.atomic():
-                income = Income.objects.create(**validated_data)
-    
-                for attachment_data in attachments_data:
-                    AccountingAttachment.objects.create(content_object=income, **attachment_data)
-    
-            return income
-    
+        attachments_data = validated_data.pop("attachments", [])
+
+        with transaction.atomic():
+            income = Income.objects.create(**validated_data)
+
+            for attachment_data in attachments_data:
+                AccountingAttachment.objects.create(
+                    content_object=income, **attachment_data
+                )
+
+        return income
+
     def update(self, instance, validated_data):
         attachments_data = validated_data.pop("attachments", [])
 
@@ -110,7 +135,9 @@ class IncomeWriterSerializer(serializers.ModelSerializer):
             instance = super().update(instance, validated_data)
 
             if attachments_data:
-                existing_attachments = {att.id: att for att in instance.attachments.all()}
+                existing_attachments = {
+                    att.id: att for att in instance.attachments.all()
+                }
                 keep_attachment_ids = []
 
                 for attachment_item in attachments_data:
@@ -125,7 +152,9 @@ class IncomeWriterSerializer(serializers.ModelSerializer):
                         att_instance.save()
                         keep_attachment_ids.append(att_instance.id)
                     else:
-                        new_att = AccountingAttachment.objects.create(content_object=instance, **attachment_item)
+                        new_att = AccountingAttachment.objects.create(
+                            content_object=instance, **attachment_item
+                        )
                         keep_attachment_ids.append(new_att.id)
 
                 for att_id, att_instance in existing_attachments.items():
@@ -133,7 +162,7 @@ class IncomeWriterSerializer(serializers.ModelSerializer):
                         att_instance.delete()
 
         return instance
-    
+
 
 class IncomeReaderSerializer(serializers.ModelSerializer):
     attachments = AccountingAttachmentSerializer(many=True, read_only=True)
@@ -150,19 +179,28 @@ class ExpenseWriterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expense
-        fields = ("amount", "date", "description", "organization", "category", "attachments")
+        fields = (
+            "amount",
+            "date",
+            "description",
+            "organization",
+            "category",
+            "attachments",
+        )
 
     def create(self, validated_data):
-            attachments_data = validated_data.pop("attachments", [])
-    
-            with transaction.atomic():
-                expense = Expense.objects.create(**validated_data)
-    
-                for attachment_data in attachments_data:
-                    AccountingAttachment.objects.create(content_object=expense, **attachment_data)
-    
-            return expense
-    
+        attachments_data = validated_data.pop("attachments", [])
+
+        with transaction.atomic():
+            expense = Expense.objects.create(**validated_data)
+
+            for attachment_data in attachments_data:
+                AccountingAttachment.objects.create(
+                    content_object=expense, **attachment_data
+                )
+
+        return expense
+
     def update(self, instance, validated_data):
         attachments_data = validated_data.pop("attachments", [])
 
@@ -170,7 +208,9 @@ class ExpenseWriterSerializer(serializers.ModelSerializer):
             instance = super().update(instance, validated_data)
 
             if attachments_data:
-                existing_attachments = {att.id: att for att in instance.attachments.all()}
+                existing_attachments = {
+                    att.id: att for att in instance.attachments.all()
+                }
                 keep_attachment_ids = []
 
                 for attachment_item in attachments_data:
@@ -185,7 +225,9 @@ class ExpenseWriterSerializer(serializers.ModelSerializer):
                         att_instance.save()
                         keep_attachment_ids.append(att_instance.id)
                     else:
-                        new_att = AccountingAttachment.objects.create(content_object=instance, **attachment_item)
+                        new_att = AccountingAttachment.objects.create(
+                            content_object=instance, **attachment_item
+                        )
                         keep_attachment_ids.append(new_att.id)
 
                 for att_id, att_instance in existing_attachments.items():
@@ -193,7 +235,7 @@ class ExpenseWriterSerializer(serializers.ModelSerializer):
                         att_instance.delete()
 
         return instance
-    
+
 
 class ExpenseReaderSerializer(serializers.ModelSerializer):
     attachments = AccountingAttachmentSerializer(many=True, read_only=True)
@@ -203,4 +245,3 @@ class ExpenseReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = "__all__"
-

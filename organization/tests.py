@@ -8,27 +8,21 @@ from membership.models import Membership
 
 
 class OrganizationAPITest(APITestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(
             email="head@test.com",
             password="password123",
             first_name="John",
             last_name="Doe",
-            phone_number="+380991112233"
+            phone_number="+380991112233",
         )
 
         login = self.client.post(
             reverse("token_obtain_pair"),
-            {
-                "email": "head@test.com",
-                "password": "password123"
-            }
+            {"email": "head@test.com", "password": "password123"},
         )
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {login.data['access']}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {login.data['access']}")
 
         self.url = reverse("organization-list")
 
@@ -38,18 +32,14 @@ class OrganizationAPITest(APITestCase):
             "city": "Kyiv",
             "street_address": "Main Street 12",
             "post_index": "9060",
-            "apartment_number": 11
+            "apartment_number": 11,
         }
 
         response = self.client.post(self.url, payload)
 
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEqual(
-            Organization.objects.count(),
-            1
-        )
+        self.assertEqual(Organization.objects.count(), 1)
 
     def test_creator_becomes_head(self):
         payload = {
@@ -57,22 +47,16 @@ class OrganizationAPITest(APITestCase):
             "city": "Kyiv",
             "street_address": "Main Street 12",
             "post_index": "9060",
-            "apartment_number": 11
+            "apartment_number": 11,
         }
 
         self.client.post(self.url, payload)
 
         organization = Organization.objects.first()
 
-        membership = Membership.objects.get(
-            member=self.user,
-            organization=organization
-        )
+        membership = Membership.objects.get(member=self.user, organization=organization)
 
-        self.assertEqual(
-            membership.role,
-            Membership.MemberRole.HEAD
-        )
+        self.assertEqual(membership.role, Membership.MemberRole.HEAD)
 
     def test_apartment_saved(self):
         payload = {
@@ -80,16 +64,13 @@ class OrganizationAPITest(APITestCase):
             "city": "Kyiv",
             "street_address": "Main Street 12",
             "post_index": "9060",
-            "apartment_number": 11
+            "apartment_number": 11,
         }
         self.client.post(self.url, payload)
 
         membership = Membership.objects.first()
 
-        self.assertEqual(
-            membership.apartment_number,
-            11
-        )
+        self.assertEqual(membership.apartment_number, 11)
 
     def test_list_organizations(self):
 
@@ -101,23 +82,17 @@ class OrganizationAPITest(APITestCase):
         )
 
         Membership.objects.create(
-           member=self.user,
-           organization=organization,
-           apartment_number=1,
-           role=Membership.MemberRole.HEAD,
-        )       
+            member=self.user,
+            organization=organization,
+            apartment_number=1,
+            role=Membership.MemberRole.HEAD,
+        )
 
         response = self.client.get(self.url)
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(
-            len(response.data),
-            1
-        )
+        self.assertEqual(len(response.data), 1)
 
     def test_retrieve_organization(self):
 
@@ -127,25 +102,19 @@ class OrganizationAPITest(APITestCase):
             street_address="Lozod 19a",
             post_index="1042",
         )
-        
+
         Membership.objects.create(
-           member=self.user,
-           organization=organization,
-           apartment_number=1,
-           role=Membership.MemberRole.HEAD,
+            member=self.user,
+            organization=organization,
+            apartment_number=1,
+            role=Membership.MemberRole.HEAD,
         )
 
         response = self.client.get(
-            reverse(
-                "organization-detail",
-                args=[organization.id]
-            )
+            reverse("organization-detail", args=[organization.id])
         )
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_organization(self):
 
@@ -153,37 +122,25 @@ class OrganizationAPITest(APITestCase):
             name="Old Name",
             city="Dnipro",
             street_address="Lozod 19a",
-            post_index="1042"
+            post_index="1042",
         )
 
         Membership.objects.create(
             member=self.user,
             organization=organization,
             role=Membership.MemberRole.HEAD,
-            apartment_number=10
+            apartment_number=10,
         )
 
         response = self.client.patch(
-            reverse(
-                "organization-detail",
-                args=[organization.id]
-            ),
-            {
-                "name": "New Name"
-            }
+            reverse("organization-detail", args=[organization.id]), {"name": "New Name"}
         )
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_200_OK
-        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         organization.refresh_from_db()
 
-        self.assertEqual(
-            organization.name,
-            "New Name"
-        )
+        self.assertEqual(organization.name, "New Name")
 
     def test_delete_organization(self):
 
@@ -191,49 +148,31 @@ class OrganizationAPITest(APITestCase):
             name="Delete me",
             city="Dnipro",
             street_address="Lozod 19a",
-            post_index="1042"
+            post_index="1042",
         )
 
         Membership.objects.create(
             member=self.user,
             organization=organization,
             role=Membership.MemberRole.HEAD,
-            apartment_number=10
+            apartment_number=10,
         )
 
         response = self.client.delete(
-            reverse(
-                "organization-detail",
-                args=[organization.id]
-            )
+            reverse("organization-detail", args=[organization.id])
         )
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_204_NO_CONTENT
-        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        self.assertFalse(
-            Organization.objects.filter(
-                id=organization.id
-            ).exists()
-        )
+        self.assertFalse(Organization.objects.filter(id=organization.id).exists())
 
     def test_anonymous_cannot_create(self):
 
         self.client.credentials()
 
-        response = self.client.post(
-            self.url,
-            {
-                "name": "Test"
-            }
-        )
+        response = self.client.post(self.url, {"name": "Test"})
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_401_UNAUTHORIZED
-        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_resident_cannot_update(self):
 
@@ -242,46 +181,32 @@ class OrganizationAPITest(APITestCase):
             password="password123",
             first_name="John",
             last_name="Doe",
-            phone_number="+380991112213"
+            phone_number="+380991112213",
         )
 
         organization = Organization.objects.create(
             name="Organization",
             city="Dnipro",
             street_address="Lozod 19a",
-            post_index="1042"
+            post_index="1042",
         )
 
         Membership.objects.create(
             member=resident,
             organization=organization,
             role=Membership.MemberRole.RESIDENT,
-            apartment_number=12
+            apartment_number=12,
         )
 
         login = self.client.post(
             reverse("token_obtain_pair"),
-            {
-                "email": "resident@test.com",
-                "password": "password123"
-            }
+            {"email": "resident@test.com", "password": "password123"},
         )
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {login.data['access']}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {login.data['access']}")
 
         response = self.client.patch(
-            reverse(
-                "organization-detail",
-                args=[organization.id]
-            ),
-            {
-                "name": "New Name"
-            }
+            reverse("organization-detail", args=[organization.id]), {"name": "New Name"}
         )
 
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_403_FORBIDDEN
-        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

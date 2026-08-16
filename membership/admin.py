@@ -8,7 +8,10 @@ class MembershipAdmin(admin.ModelAdmin):
     list_display = ("member", "organization", "role")
     list_filter = ("role", "organization")
     list_per_page = 50
-    sortable_by = ("registered_at", "organization",)
+    sortable_by = (
+        "registered_at",
+        "organization",
+    )
 
 
 admin.site.register(Membership, MembershipAdmin)

@@ -18,39 +18,29 @@ class BudgetAPITest(APITestCase):
             phone_number="+380501112233",
             first_name="Head",
             last_name="User",
-            password="password123"
+            password="password123",
         )
 
         self.organization = Organization.objects.create(
-            name="OSBB",
-            city="Kyiv",
-            street_address="Main street",
-            post_index="01001"
+            name="OSBB", city="Kyiv", street_address="Main street", post_index="01001"
         )
 
         self.category = Category.objects.create(
-            name="First and Test",
-            organization=self.organization
+            name="First and Test", organization=self.organization
         )
 
         Membership.objects.create(
             apartment_number=13,
             member=self.user,
             organization=self.organization,
-            role=Membership.MemberRole.HEAD
+            role=Membership.MemberRole.HEAD,
         )
 
         response = self.client.post(
-            "/api/auth/login/",
-            {
-                "email": "head@test.com",
-                "password": "password123"
-            }
+            "/api/auth/login/", {"email": "head@test.com", "password": "password123"}
         )
 
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {response.data['access']}"
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access']}")
 
         self.url = reverse("budget-list")
 
@@ -62,7 +52,7 @@ class BudgetAPITest(APITestCase):
             "category": str(self.category.id),
             "planned_amount": 123.12,
             "year": 2026,
-            "month": 2
+            "month": 2,
         }
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -77,7 +67,7 @@ class BudgetAPITest(APITestCase):
             "category": str(self.category.id),
             "planned_amount": 123.12,
             "year": 2026,
-            "month": 2
+            "month": 2,
         }
 
         response = self.client.post(self.url, payload)
@@ -90,7 +80,7 @@ class BudgetAPITest(APITestCase):
             category=self.category,
             planned_amount=123.12,
             year=2026,
-            month=2
+            month=2,
         )
 
         response = self.client.get(self.url)
@@ -104,12 +94,10 @@ class BudgetAPITest(APITestCase):
             category=self.category,
             planned_amount=123.12,
             year=2026,
-            month=2
+            month=2,
         )
 
-        response = self.client.get(
-            reverse("budget-detail", args=[budget.id])
-        )
+        response = self.client.get(reverse("budget-detail", args=[budget.id]))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["planned_amount"], "123.12")
@@ -117,21 +105,18 @@ class BudgetAPITest(APITestCase):
 
     def test_partial_update_budget(self):
         budget = Budget.objects.create(
-                organization=self.organization,
-                category=self.category,
-                planned_amount=123.12,
-                year=2026,
-                month=2
-            )
+            organization=self.organization,
+            category=self.category,
+            planned_amount=123.12,
+            year=2026,
+            month=2,
+        )
 
         response = self.client.patch(
-            reverse("budget-detail", args=[budget.id]),
-            {
-                "planned_amount": 111111.11
-            }
-        )   
+            reverse("budget-detail", args=[budget.id]), {"planned_amount": 111111.11}
+        )
 
-        budget.refresh_from_db()  
+        budget.refresh_from_db()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(budget.planned_amount, Decimal("111111.11"))
@@ -143,13 +128,10 @@ class BudgetAPITest(APITestCase):
             category=self.category,
             planned_amount=123.12,
             year=2026,
-            month=2
+            month=2,
         )
 
-        response = self.client.delete(
-            reverse("budget-detail", args=[budget.id])
-        )
+        response = self.client.delete(reverse("budget-detail", args=[budget.id]))
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Budget.objects.count(), 0)
-    

@@ -8,15 +8,17 @@ from organization.models import Organization
 
 class Tag(models.Model):
     name = models.CharField(max_length=15)
-    organization = models.ForeignKey(Organization, related_name="tags", on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization, related_name="tags", on_delete=models.CASCADE
+    )
 
     def __str__(self) -> str:
         return self.name
-        
+
     class Meta:
         verbose_name = "Tag"
         verbose_name_plural = "Tags"
-    
+
 
 class Post(models.Model):
     class PostStatus(models.TextChoices):
@@ -29,14 +31,18 @@ class Post(models.Model):
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=1, choices=PostStatus, default=PostStatus.DRAFT)
+    status = models.CharField(
+        max_length=1, choices=PostStatus, default=PostStatus.DRAFT
+    )
     views = models.PositiveIntegerField(blank=True, default=0)
     tags = models.ManyToManyField(Tag, related_name="posts", blank=True)
-    organization = models.ForeignKey(Organization, related_name="posts", on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        Organization, related_name="posts", on_delete=models.CASCADE
+    )
 
     def __str__(self) -> str:
         return self.title
-    
+
     class Meta:
         verbose_name = "Post"
         verbose_name_plural = "Posts"
@@ -49,7 +55,7 @@ class NewsAttachment(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    #? maybe I'll add ordering here if I'll need to implement image circle for example
+    # ? maybe I'll add ordering here if I'll need to implement image circle for example
     # Here I'll connect the same lib as for a personal website
 
     class Meta:

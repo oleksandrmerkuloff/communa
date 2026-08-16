@@ -9,10 +9,9 @@ class CanViewNews(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in permissions.SAFE_METHODS:
             return False
-        
+
         return Membership.objects.filter(
-            member=request.user,
-            organization=obj.organization
+            member=request.user, organization=obj.organization
         ).exists()
 
 
@@ -23,11 +22,10 @@ class CanCreateNews(permissions.BasePermission):
 
         if not request.user.is_authenticated:
             return False
-        
+
         member = get_membership(
-            user=request.user,
-            organization_id=request.data.get("organization")
-            )
+            user=request.user, organization_id=request.data.get("organization")
+        )
 
         if not member:
             return False
@@ -37,13 +35,13 @@ class CanCreateNews(permissions.BasePermission):
 
 class CanEditNews(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ("PATCH", "PUT",):
+        if request.method not in (
+            "PATCH",
+            "PUT",
+        ):
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -56,10 +54,7 @@ class CanDeleteNews(permissions.BasePermission):
         if request.method != "DELETE":
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -67,7 +62,7 @@ class CanDeleteNews(permissions.BasePermission):
         return member.role != Membership.MemberRole.RESIDENT
 
 
-class CanPublishNews():
+class CanPublishNews:
     pass
 
 
@@ -75,11 +70,10 @@ class CanCreateTags(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST":
             return False
-        
+
         member = get_membership(
-            user=request.user,
-            organization_id=request.data.get("organization")
-            )
+            user=request.user, organization_id=request.data.get("organization")
+        )
 
         if not member:
             return False
@@ -91,11 +85,8 @@ class CanEditTags(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in ("PATCH", "PUT"):
             return False
-        
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -107,11 +98,8 @@ class CanDeleteTags(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method != "DELETE":
             return False
-        
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False

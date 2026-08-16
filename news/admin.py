@@ -8,21 +8,29 @@ class NewsAttachmentInline(admin.TabularInline):
     extra = 1
 
 
-
 class PostAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
-    list_display = [
+    list_display = ["title", "created_at", "status", "organization"]
+    list_display_links = [
         "title",
-        "created_at",
-        "status",
-        "organization"
     ]
-    list_display_links = ["title",]
-    list_filter = ["tags",]
+    list_filter = [
+        "tags",
+    ]
     list_per_page = 50
-    readonly_fields = ["created_at", "updated_at",]
-    search_fields = ["title", "organization__name",]
-    sortable_by = ["created_at", "updated_at", "organization__name",]
+    readonly_fields = [
+        "created_at",
+        "updated_at",
+    ]
+    search_fields = [
+        "title",
+        "organization__name",
+    ]
+    sortable_by = [
+        "created_at",
+        "updated_at",
+        "organization__name",
+    ]
     inlines = [
         NewsAttachmentInline,
     ]

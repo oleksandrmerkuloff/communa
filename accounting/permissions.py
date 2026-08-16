@@ -10,8 +10,7 @@ class CanViewBudget(permissions.BasePermission):
             return False
 
         return Membership.objects.filter(
-            member=request.user,
-            organization=obj.organization
+            member=request.user, organization=obj.organization
         ).exists()
 
 
@@ -24,8 +23,7 @@ class CanCreateBudget(permissions.BasePermission):
             return False
 
         member = get_membership(
-            user=request.user,
-            organization_id=request.data.get("organization")
+            user=request.user, organization_id=request.data.get("organization")
         )
         if not member:
             return False
@@ -35,13 +33,13 @@ class CanCreateBudget(permissions.BasePermission):
 
 class CanEditBudget(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ("PATCH", "PUT",):
+        if request.method not in (
+            "PATCH",
+            "PUT",
+        ):
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -54,10 +52,7 @@ class CanDeleteBudget(permissions.BasePermission):
         if request.method != "DELETE":
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -71,8 +66,7 @@ class CanViewIncome(permissions.BasePermission):
             return False
 
         return Membership.objects.filter(
-            member=request.user,
-            organization=obj.organization
+            member=request.user, organization=obj.organization
         ).exists()
 
 
@@ -85,8 +79,7 @@ class CanCreateIncome(permissions.BasePermission):
             return False
 
         member = get_membership(
-            user=request.user,
-            organization_id=request.data.get("organization")
+            user=request.user, organization_id=request.data.get("organization")
         )
         if not member:
             return False
@@ -96,13 +89,13 @@ class CanCreateIncome(permissions.BasePermission):
 
 class CanEditIncome(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ("PATCH", "PUT",):
+        if request.method not in (
+            "PATCH",
+            "PUT",
+        ):
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -115,10 +108,7 @@ class CanDeleteIncome(permissions.BasePermission):
         if request.method != "DELETE":
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -132,8 +122,7 @@ class CanViewExpense(permissions.BasePermission):
             return False
 
         return Membership.objects.filter(
-            member=request.user,
-            organization=obj.organization
+            member=request.user, organization=obj.organization
         ).exists()
 
 
@@ -146,8 +135,7 @@ class CanCreateExpense(permissions.BasePermission):
             return False
 
         member = get_membership(
-            user=request.user,
-            organization_id=request.data.get("organization")
+            user=request.user, organization_id=request.data.get("organization")
         )
         if not member:
             return False
@@ -157,13 +145,13 @@ class CanCreateExpense(permissions.BasePermission):
 
 class CanEditExpense(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ("PATCH", "PUT",):
+        if request.method not in (
+            "PATCH",
+            "PUT",
+        ):
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -176,10 +164,7 @@ class CanDeleteExpense(permissions.BasePermission):
         if request.method != "DELETE":
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -193,8 +178,7 @@ class CanViewCategory(permissions.BasePermission):
             return False
 
         return Membership.objects.filter(
-            member=request.user,
-            organization=obj.organization
+            member=request.user, organization=obj.organization
         ).exists()
 
 
@@ -207,8 +191,7 @@ class CanCreateCategory(permissions.BasePermission):
             return False
 
         member = get_membership(
-            user=request.user,
-            organization_id=request.data.get("organization")
+            user=request.user, organization_id=request.data.get("organization")
         )
         if not member:
             return False
@@ -218,13 +201,13 @@ class CanCreateCategory(permissions.BasePermission):
 
 class CanEditCategory(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method not in ("PATCH", "PUT",):
+        if request.method not in (
+            "PATCH",
+            "PUT",
+        ):
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -237,10 +220,7 @@ class CanDeleteCategory(permissions.BasePermission):
         if request.method != "DELETE":
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False

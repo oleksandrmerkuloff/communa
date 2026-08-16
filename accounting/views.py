@@ -2,16 +2,32 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Budget, Income, Expense, Category
 from .serializers import (
-    BudgetWriterSerializer, BudgetReaderSerializer,
-    IncomeWriterSerializer, IncomeReaderSerializer,
-    ExpenseWriterSerializer, ExpenseReaderSerializer,
-    CategorySerializer, CategoryShortSerializer
+    BudgetWriterSerializer,
+    BudgetReaderSerializer,
+    IncomeWriterSerializer,
+    IncomeReaderSerializer,
+    ExpenseWriterSerializer,
+    ExpenseReaderSerializer,
+    CategorySerializer,
+    CategoryShortSerializer,
 )
 from .permissions import (
-    CanCreateBudget, CanEditBudget, CanViewBudget, CanDeleteBudget,
-    CanCreateCategory, CanDeleteCategory, CanEditCategory, CanViewCategory,
-    CanEditIncome, CanViewIncome, CanCreateIncome, CanDeleteIncome,
-    CanEditExpense, CanViewExpense, CanCreateExpense, CanDeleteExpense
+    CanCreateBudget,
+    CanEditBudget,
+    CanViewBudget,
+    CanDeleteBudget,
+    CanCreateCategory,
+    CanDeleteCategory,
+    CanEditCategory,
+    CanViewCategory,
+    CanEditIncome,
+    CanViewIncome,
+    CanCreateIncome,
+    CanDeleteIncome,
+    CanEditExpense,
+    CanViewExpense,
+    CanCreateExpense,
+    CanDeleteExpense,
 )
 
 
@@ -33,8 +49,7 @@ class CategoryViewSet(ModelViewSet):
 
     def get_queryset(self):
         return (
-            Category.objects
-            .filter(organization__memberships__member=self.request.user)
+            Category.objects.filter(organization__memberships__member=self.request.user)
             .select_related("organization")
             .distinct()
         )
@@ -66,8 +81,7 @@ class BudgetViewSet(ModelViewSet):
             return Budget.objects.none()
 
         return (
-            Budget.objects
-            .filter(organization__memberships__member=self.request.user)
+            Budget.objects.filter(organization__memberships__member=self.request.user)
             .select_related("organization", "category")
             .prefetch_related("attachments")
             .distinct()
@@ -100,8 +114,7 @@ class IncomeViewSet(ModelViewSet):
             return Income.objects.none()
 
         return (
-            Income.objects
-            .filter(organization__memberships__member=self.request.user)
+            Income.objects.filter(organization__memberships__member=self.request.user)
             .select_related("organization", "category")
             .prefetch_related("attachments")
             .distinct()
@@ -134,8 +147,7 @@ class ExpenseViewSet(ModelViewSet):
             return Expense.objects.none()
 
         return (
-            Expense.objects
-            .filter(organization__memberships__member=self.request.user)
+            Expense.objects.filter(organization__memberships__member=self.request.user)
             .select_related("organization", "category")
             .prefetch_related("attachments")
             .distinct()

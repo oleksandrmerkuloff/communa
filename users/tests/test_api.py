@@ -5,7 +5,6 @@ from users.models import User
 
 
 class RegisterAPITest(APITestCase):
-
     def setUp(self):
         self.url = reverse("user-list")
 
@@ -15,7 +14,7 @@ class RegisterAPITest(APITestCase):
             "password": "password123",
             "first_name": "John",
             "last_name": "Doe",
-            "phone_number": "+380991112233"
+            "phone_number": "+380991112233",
         }
 
         response = self.client.post(self.url, payload)
@@ -29,17 +28,16 @@ class RegisterAPITest(APITestCase):
             password="password123",
             first_name="Eva",
             last_name="Adams",
-            phone_number="+380991112234"
+            phone_number="+380991112234",
         )
 
         payload = {
-                    "email": "user@test.com",
-                    "password": "password123",
-                    "first_name": "John",
-                    "last_name": "Doe",
-                    "phone_number": "+380991112233"
-            }
-        
+            "email": "user@test.com",
+            "password": "password123",
+            "first_name": "John",
+            "last_name": "Doe",
+            "phone_number": "+380991112233",
+        }
 
         response = self.client.post(self.url, payload)
 
@@ -49,7 +47,7 @@ class RegisterAPITest(APITestCase):
         payload = {
             "email": "user@test.com",
             "password": "password123",
-            "phone_number": "123"
+            "phone_number": "123",
         }
 
         response = self.client.post(self.url, payload)
@@ -58,16 +56,16 @@ class RegisterAPITest(APITestCase):
 
     def test_password_hashed(self):
         payload = {
-                    "email": "user@test.com",
-                    "password": "password123",
-                    "first_name": "John",
-                    "last_name": "Doe",
-                    "phone_number": "+380991112233"
-            }
-    
+            "email": "user@test.com",
+            "password": "password123",
+            "first_name": "John",
+            "last_name": "Doe",
+            "phone_number": "+380991112233",
+        }
+
         self.client.post(self.url, payload)
-    
+
         user = User.objects.get(email="user@test.com")
-    
+
         self.assertNotEqual(user.password, "password123")
         self.assertTrue(user.check_password("password123"))

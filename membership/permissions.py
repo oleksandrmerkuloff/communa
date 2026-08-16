@@ -10,10 +10,9 @@ class CanViewMembership(permissions.BasePermission):
             return False
         if request.method not in permissions.SAFE_METHODS:
             return False
-        
+
         return Membership.objects.filter(
-            member=request.user,
-            organization=obj.organization
+            member=request.user, organization=obj.organization
         ).exists()
 
 
@@ -24,11 +23,10 @@ class CanCreateMembership(permissions.BasePermission):
 
         if not request.user.is_authenticated:
             return False
-        
+
         member = get_membership(
-            user=request.user,
-            organization_id=request.data.get("organization")
-            )
+            user=request.user, organization_id=request.data.get("organization")
+        )
 
         if not member:
             return False
@@ -45,10 +43,7 @@ class CanEditMembership(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False
@@ -61,10 +56,7 @@ class CanDeleteMembership(permissions.BasePermission):
         if request.method != "DELETE":
             return False
 
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.organization.id
-        )
+        member = get_membership(user=request.user, organization_id=obj.organization.id)
 
         if not member:
             return False

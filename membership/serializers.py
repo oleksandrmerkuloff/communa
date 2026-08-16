@@ -8,6 +8,7 @@ from organization.serializers import OrganizationReaderSerializer
 class MembershipReaderSerializer(ModelSerializer):
     member = UserReaderSerializer(read_only=True)
     organization = OrganizationReaderSerializer(read_only=True)
+
     class Meta:
         model = Membership
         fields = "__all__"

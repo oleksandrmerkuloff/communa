@@ -5,30 +5,36 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Organization',
+            name="Organization",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=75)),
-                ('country', models.CharField(default='Ukraine', max_length=75)),
-                ('city', models.CharField(max_length=75)),
-                ('street_address', models.CharField(max_length=150)),
-                ('post_index', models.CharField(max_length=15)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.CharField(max_length=75)),
+                ("country", models.CharField(default="Ukraine", max_length=75)),
+                ("city", models.CharField(max_length=75)),
+                ("street_address", models.CharField(max_length=150)),
+                ("post_index", models.CharField(max_length=15)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'verbose_name': 'Organization',
-                'verbose_name_plural': 'Organizations',
-                'ordering': ['-created_at'],
+                "verbose_name": "Organization",
+                "verbose_name_plural": "Organizations",
+                "ordering": ["-created_at"],
             },
         ),
     ]

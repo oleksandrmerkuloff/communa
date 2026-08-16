@@ -22,6 +22,7 @@ class UserReaderSerializer(serializers.ModelSerializer):
 
 class UserWriterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
         fields = (
@@ -32,7 +33,7 @@ class UserWriterSerializer(serializers.ModelSerializer):
             "password",
         )
         extra_kwargs = {
-        "password": {"write_only": True},
+            "password": {"write_only": True},
         }
 
     def create(self, validated_data):
@@ -40,7 +41,7 @@ class UserWriterSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data, password=password)
 
     def validate_email(self, value):
-        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
         if re.fullmatch(pattern, value):
             return value
@@ -54,16 +55,12 @@ class UserWriterSerializer(serializers.ModelSerializer):
 
         return serializers.ValidationError("Wrong phone number.")
 
+
 class UpdateUserSerializer(serializers.ModelSerializer):
     # add later validate email and phone_number
     class Meta:
         model = User
-        fields = (
-            "email",
-            "phone_number",
-            "first_name",
-            "last_name"
-        )
+        fields = ("email", "phone_number", "first_name", "last_name")
 
     def validate_phone_number(self, value):
         pattern = r"^(?:\+38)?(?:\(0\d{2}\)|0\d{2})\d{7}$"

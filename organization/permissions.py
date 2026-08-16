@@ -10,19 +10,17 @@ class CanCreateOrganization(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
+
 class CanEditOrganization(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in ("PATCH", "PUT"):
             return False
-        
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.id
-        )
+
+        member = get_membership(user=request.user, organization_id=obj.id)
 
         if not member:
             return False
-        
+
         return member.role != Membership.MemberRole.RESIDENT
 
 
@@ -30,11 +28,8 @@ class CanDeleteOrganization(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method != "DELETE":
             return False
-        
-        member = get_membership(
-            user=request.user,
-            organization_id=obj.id
-        )
+
+        member = get_membership(user=request.user, organization_id=obj.id)
 
         if not member:
             return False
