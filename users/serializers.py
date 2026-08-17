@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 
 from .models import User
+from .validators import validate_email, validate_phone_number
 
 
 class UserReaderSerializer(serializers.ModelSerializer):
@@ -16,12 +17,15 @@ class UserReaderSerializer(serializers.ModelSerializer):
             "last_name",
             "phone_number",
             "is_admin",
+            "is_active",
             "registered_at",
         )
 
 
 class UserWriterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(validators=[validate_email])
+    phone_number = serializers.CharField(validators=[validate_phone_number])
 
     class Meta:
         model = User
@@ -32,43 +36,19 @@ class UserWriterSerializer(serializers.ModelSerializer):
             "last_name",
             "password",
         )
-        extra_kwargs = {
-            "password": {"write_only": True},
-        }
 
     def create(self, validated_data):
         password = validated_data.pop("password")
         return User.objects.create_user(**validated_data, password=password)
 
-    def validate_email(self, value):
-        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-
-        if re.fullmatch(pattern, value):
-            return value
-        return serializers.ValidationError("Wrong email address.")
-
-    def validate_phone_number(self, value):
-        pattern = r"^(?:\+38)?(?:\(0\d{2}\)|0\d{2})\d{7}$"
-
-        if re.fullmatch(pattern, value):
-            return value
-
-        return serializers.ValidationError("Wrong phone number.")
-
 
 class UpdateUserSerializer(serializers.ModelSerializer):
-    # add later validate email and phone_number
+    email = serializers.EmailField(validators=[validate_email])
+    phone_number = serializers.CharField(validators=[validate_phone_number])
+
     class Meta:
         model = User
         fields = ("email", "phone_number", "first_name", "last_name")
-
-    def validate_phone_number(self, value):
-        pattern = r"^(?:\+38)?(?:\(0\d{2}\)|0\d{2})\d{7}$"
-
-        if re.fullmatch(pattern, value):
-            return value
-
-        raise serializers.ValidationError("Wrong phone number.")
 
 
 class ChangePasswordSerializer(serializers.Serializer):
