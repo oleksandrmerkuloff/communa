@@ -5,19 +5,18 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from organization.models import Organization
+from core.mixins import TimestampMixin
 
 
 User = get_user_model()
 
 
-class Apartment(models.Model):
+class Apartment(TimestampMixin):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     number = models.PositiveIntegerField()
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="apartments"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return (
@@ -37,7 +36,7 @@ class Apartment(models.Model):
 
 
 #! Add validation for head role. 1 ap == one head
-class ApartmentMembership(models.Model):
+class ApartmentMembership(TimestampMixin):
     class ResidentRoleChoice(models.TextChoices):
         HEAD = "H", _("Head")
         RESIDENT = "R", _("Resident")
@@ -52,8 +51,6 @@ class ApartmentMembership(models.Model):
         Apartment, on_delete=models.CASCADE, related_name="residents"
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="residents")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name} from apartment number {self.apartment.number}."

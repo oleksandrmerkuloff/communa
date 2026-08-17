@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from organization.models import Organization
+from core.mixins import TimestampMixin
 
 
 class Tag(models.Model):
@@ -18,9 +19,16 @@ class Tag(models.Model):
     class Meta:
         verbose_name = "Tag"
         verbose_name_plural = "Tags"
+        ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=("name", "organization"),
+                name="unique_tag_for_each_organization"
+            )
+        ]
 
 
-class Post(models.Model):
+class Post(TimestampMixin):
     class PostStatus(models.TextChoices):
         DRAFT = "D", _("Draft")
         PUBLISHED = "P", _("Published")
@@ -29,8 +37,6 @@ class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50)
     content = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(
         max_length=1, choices=PostStatus, default=PostStatus.DRAFT
     )
@@ -55,9 +61,7 @@ class NewsAttachment(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # ? maybe I'll add ordering here if I'll need to implement image circle for example
-    # Here I'll connect the same lib as for a personal website
-
     class Meta:
         verbose_name = "News Attachment"
         verbose_name_plural = "News Attachments"
+        ordering = ["-uploaded_at"]
