@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 from organization.models import Organization
 from core.mixins import TimestampMixin
@@ -35,33 +36,37 @@ class Apartment(TimestampMixin):
         ]
 
 
-#! Add validation for head role. 1 ap == one head
 class ApartmentMembership(TimestampMixin):
-    class ResidentRoleChoice(models.TextChoices):
+    class ApartmentMembershipRoleChoice(models.TextChoices):
         HEAD = "H", _("Head")
         RESIDENT = "R", _("Resident")
 
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     role = models.CharField(
         max_length=1,
-        choices=ResidentRoleChoice.choices,
-        default=ResidentRoleChoice.RESIDENT,
+        choices=ApartmentMembershipRoleChoice.choices,
+        default=ApartmentMembershipRoleChoice.RESIDENT,
     )
     apartment = models.ForeignKey(
-        Apartment, on_delete=models.CASCADE, related_name="residents"
+        Apartment, on_delete=models.CASCADE, related_name="memberships"
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="residents")
+    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name="apartment_memberships")
 
     def __str__(self) -> str:
-        return f"{self.user.first_name} {self.user.last_name} from apartment number {self.apartment.number}."
+        return f"{self.member.first_name} {self.member.last_name} from apartment number {self.apartment.number}."
 
     class Meta:
-        verbose_name = "Apartment Resident"
-        verbose_name_plural = "Apartment Residents"
+        verbose_name = "Apartment Membership"
+        verbose_name_plural = "Apartment Memberships"
         ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "apartment"],
+                fields=["member", "apartment"],
                 name="unique_apartment_resident",
-            )
+            ),
+            models.UniqueConstraint(
+                fields=["apartment"],
+                condition=Q(role=ResidentRoleChoice.HEAD),
+                name="unique_apartment_head",
+            ),
         ]

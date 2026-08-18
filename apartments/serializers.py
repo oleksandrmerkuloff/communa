@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from .models import ApartmentMembership, Apartment
@@ -37,5 +38,20 @@ class ApartmentMembershipWriterSerializer(ModelSerializer):
         fields = (
             "role",
             "apartment",
-            "user",
+            "member",
         )
+
+    def validate(self, attrs):
+        apartment = attrs.get("apartment")
+        role = attrs.get("role")
+
+        if (
+            apartment
+            and role == ApartmentMembership.ApartmentMembershipRoleChoice.HEAD
+            and ApartmentMembership.objects.filter(
+                apartment=apartment,
+                role=ApartmentMembership.ApartmentMembershipRoleChoice.HEAD,
+            ).exclude(pk=self.instance.pk if self.instance else None).exists()
+        ):
+            raise serializers.ValidationError("This apartment already has a head.")
+        return attrs
