@@ -15,7 +15,7 @@ User = get_user_model()
 
 class Membership(TimestampMixin):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="memberhips")
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="memberships")
     member = models.ForeignKey(
         User, related_name="memberships", on_delete=models.CASCADE
     )
