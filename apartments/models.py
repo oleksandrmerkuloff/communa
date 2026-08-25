@@ -50,7 +50,7 @@ class ApartmentMembership(TimestampMixin):
     apartment = models.ForeignKey(
         Apartment, on_delete=models.CASCADE, related_name="memberships"
     )
-    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name="apartment_memberships")
+    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
 
     def __str__(self) -> str:
         return f"{self.member.first_name} {self.member.last_name} from apartment number {self.apartment.number}."
@@ -66,7 +66,7 @@ class ApartmentMembership(TimestampMixin):
             ),
             models.UniqueConstraint(
                 fields=["apartment"],
-                condition=Q(role=ResidentRoleChoice.HEAD),
+                condition=Q(role=ApartmentMembershipRoleChoice.HEAD),
                 name="unique_apartment_head",
             ),
         ]

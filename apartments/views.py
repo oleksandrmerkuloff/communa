@@ -12,6 +12,9 @@ from .serializers import (
 class ApartmentViewSet(ModelViewSet):
     queryset = Apartment.objects.all()
 
+    def get_queryset(self):
+        return Apartment.objects.filter(organization__memberships__member=self.request.user)
+
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
             return ApartmentReaderSerializer
@@ -20,6 +23,9 @@ class ApartmentViewSet(ModelViewSet):
 
 class ApartmentMembershipViewSet(ModelViewSet):
     queryset = ApartmentMembership.objects.all()
+
+    def get_queryset(self):
+        return Apartment.objects.filter(organization__memberships__member=self.request.user)
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
