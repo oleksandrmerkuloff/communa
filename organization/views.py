@@ -37,6 +37,7 @@ class OrganizationViewSet(ModelViewSet):
             return OrganizationReaderSerializer
         return OrganizationWriterSerializer
 
+    # Here I need change head assign logic
     def perform_create(self, serializer):
         apartment_number = self.request.data.get("apartment_number")
 

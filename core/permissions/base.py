@@ -1,7 +1,5 @@
 from rest_framework.permissions import BasePermission
 
-from membership.services import get_membership
-
 
 class HasPermission(BasePermission):
     required_permission = None

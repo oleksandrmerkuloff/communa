@@ -6,5 +6,5 @@ from .models import Permission
 class PermissionReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
-        fields = ("code",)
-        read_only_fields = ["code"]
+        fields = "__all__"
+        read_only_fields = ["code", "name"]
