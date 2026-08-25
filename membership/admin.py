@@ -9,7 +9,7 @@ class MembershipAdmin(admin.ModelAdmin):
     list_filter = ("role", "organization")
     list_per_page = 50
     sortable_by = (
-        "registered_at",
+        "created_at",
         "organization",
     )
 

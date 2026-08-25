@@ -1,12 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Post, Tag, NewsAttachment
+from .models import Post, Tag
 from .serializers import (
     PostReaderSerializer,
     PostWriterSerializer,
     TagSerializer,
     TagShortSerializer,
-    NewsAttachmentSerializer,
 )
 from .permissions import (
     CanEditTags,

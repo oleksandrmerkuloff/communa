@@ -24,7 +24,7 @@ class ApartmentWriterSerializer(ModelSerializer):
 
 
 class ApartmentMembershipReaderSerializer(ModelSerializer):
-    user = UserReaderSerializer(read_only=True)
+    member = UserReaderSerializer(read_only=True)
     apartment = ApartmentReaderSerializer(read_only=True)
 
     class Meta:

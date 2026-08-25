@@ -19,7 +19,7 @@ class ApartmentViewSet(ModelViewSet):
 
 
 class ApartmentMembershipViewSet(ModelViewSet):
-    queryset = ApartmentMembership
+    queryset = ApartmentMembership.objects.all()
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):

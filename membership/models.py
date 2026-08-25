@@ -4,28 +4,19 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
+from core.mixins import TimestampMixin
 from organization.models import Organization
+from roles.models import Role
+from apartments.models import Apartment
 
 
 User = get_user_model()
 
 
-class Membership(models.Model):
-    class MemberRole(models.TextChoices):
-        RESIDENT = "R", _("Resident")
-        SECRETARY = "S", _("Secretary")
-        ACCOUNTANT = "A", _("Accountant")
-        VICE_HEAD = "V", _("Vice Head")
-        HEAD = "H", _("Head")
-
+class Membership(TimestampMixin):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    role = models.CharField(
-        max_length=1, choices=MemberRole.choices, default=MemberRole.RESIDENT
-    )
-    apartment_number = models.PositiveSmallIntegerField()
-    can_vote = models.BooleanField(default=True)
-    registered_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="memberhips")
+    apartment = models.ForeignKey(Apartment, on_delete=models.PROTECT, related_name="memberships")
     member = models.ForeignKey(
         User, related_name="memberships", on_delete=models.CASCADE
     )
@@ -40,7 +31,7 @@ class Membership(models.Model):
     class Meta:
         verbose_name = "Member"
         verbose_name_plural = "Members"
-        ordering = ["organization", "role", "-registered_at"]
+        ordering = ["organization", "role", "-created_at"]
         constraints = [
             models.UniqueConstraint(
                 fields=["member", "organization"],
