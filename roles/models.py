@@ -10,6 +10,7 @@ from permissions.models import Permission
 class Role(TimestampMixin):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100)
+    is_system = models.BooleanField(default=False)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     permissions = models.ManyToManyField(Permission, related_name="roles")
 

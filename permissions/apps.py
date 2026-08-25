@@ -3,3 +3,6 @@ from django.apps import AppConfig
 
 class PermissionsConfig(AppConfig):
     name = 'permissions'
+
+    def ready(self) -> None:
+        from . import signals

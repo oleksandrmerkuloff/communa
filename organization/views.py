@@ -11,6 +11,7 @@ from .permissions import (
     CanDeleteOrganization,
 )
 from membership.models import Membership
+from roles.models import Role
 
 
 class OrganizationViewSet(ModelViewSet):
@@ -37,16 +38,24 @@ class OrganizationViewSet(ModelViewSet):
             return OrganizationReaderSerializer
         return OrganizationWriterSerializer
 
-    # Here I need change head assign logic
     def perform_create(self, serializer):
-        apartment_number = self.request.data.get("apartment_number")
-
         with transaction.atomic():
             organization = serializer.save()
+
+            head_role = Role.objects.filter(
+                organization=organization, 
+                name="Голова ОСББ"
+            ).first()
+
+            if not head_role:
+                head_role = Role.objects.create(
+                    organization=organization,
+                    name="Голова ОСББ",
+                    is_system=True
+                )
 
             Membership.objects.create(
                 member=self.request.user,
                 organization=organization,
-                apartment_number=apartment_number,
-                role=Membership.MemberRole.HEAD,
+                role=head_role,
             )
