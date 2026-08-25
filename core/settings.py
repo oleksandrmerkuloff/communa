@@ -22,11 +22,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
+
     "users.apps.UsersConfig",
     "organization.apps.OrganizationConfig",
+    "roles.apps.RolesConfig",
+    "permissions.apps.PermissionsConfig",
+    "apartments.apps.ApartmentsConfig",
     "membership.apps.MembershipConfig",
     "news.apps.NewsConfig",
     "accounting.apps.AccountingConfig",

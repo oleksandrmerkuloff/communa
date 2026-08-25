@@ -10,7 +10,7 @@ class PermissionCode:
     ORGANIZATIONS_DELETE = "organizations.delete"
 
     MEMBERSHIPS_READ = "memberships.read"
-    MEMBERSHIPS_CREATE = "memberships.update"
+    MEMBERSHIPS_CREATE = "memberships.create"
     MEMBERSHIPS_UPDATE = "memberships.update"
     MEMBERSHIPS_DELETE = "memberships.delete"
 
